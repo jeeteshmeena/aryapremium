@@ -300,12 +300,6 @@ export function CartPanel() {
           )}
         </div>
       </main>
-
-            </>
-          )}
-        </div>
-      </main>
-
       {/* Sticky checkout footer (only when items present) */}
       {cart.length > 0 && (
         <footer
