@@ -301,6 +301,11 @@ export function CartPanel() {
         </div>
       </main>
 
+            </>
+          )}
+        </div>
+      </main>
+
       {/* Sticky checkout footer (only when items present) */}
       {cart.length > 0 && (
         <footer
@@ -325,26 +330,6 @@ export function CartPanel() {
                 <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.6} />
               </span>
             </span>
-          </button>
-        </footer>
-      )}
-            </>
-          )}
-        </div>
-      </main>
-
-      {/* Sticky checkout footer (only when items present) */}
-      {cart.length > 0 && (
-        <footer
-          className="border-t border-border bg-background/95 backdrop-blur-md px-4 pt-3 shrink-0"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 12px)" }}
-        >
-          <button
-            onClick={handleCheckout}
-            className="w-full h-14 rounded-2xl bg-foreground text-background font-bold text-[15px] tracking-tight active:scale-[0.98] transition flex items-center justify-center gap-2 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)]"
-          >
-            {t("cart.checkout") || "Proceed To Checkout"}
-            <span className="opacity-70">→</span>
           </button>
         </footer>
       )}
