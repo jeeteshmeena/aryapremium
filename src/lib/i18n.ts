@@ -7,6 +7,7 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     "nav.explore": "Explore",
     "nav.library": "Library",
     "nav.profile": "Profile",
+    "nav.cart": "Cart",
 
     // ── Common ──────────────────────────────────────────────────
     "common.back": "Back",
@@ -174,6 +175,7 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     "nav.explore": "एक्सप्लोर",
     "nav.library": "लाइब्रेरी",
     "nav.profile": "प्रोफ़ाइल",
+    "nav.cart": "कार्ट",
 
     // ── Common ──────────────────────────────────────────────────
     "common.back": "वापस",
@@ -341,6 +343,7 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     "nav.explore": "Explore Karo",
     "nav.library": "Library",
     "nav.profile": "Profile",
+    "nav.cart": "Cart",
 
     // ── Common ──────────────────────────────────────────────────
     "common.back": "Wapas",
