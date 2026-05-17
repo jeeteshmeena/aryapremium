@@ -44,6 +44,7 @@ export function BottomNav() {
           const count = cart.length;
 
           if (isCart) {
+            return (
               <button
                 key={id}
                 id="arya-cart-target"
