@@ -45,12 +45,7 @@ export function BottomNav() {
 
           if (isCart) {
             return (
-              <button
-                key={id}
-                onClick={() => onTap(id)}
-                aria-label={label}
-                className="relative -mt-6 h-14 w-14 grid place-items-center rounded-full bg-foreground text-background shadow-[0_10px_24px_-6px_rgba(0,0,0,0.45)] active:scale-90 transition-transform duration-200"
-              >
+                id="arya-cart-target"
                 <Icon className="h-6 w-6" strokeWidth={2.2} />
                 {count > 0 && (
                   <span
