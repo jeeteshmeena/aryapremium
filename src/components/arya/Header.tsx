@@ -1,4 +1,4 @@
-import { Search, ShoppingCart, ArrowLeft, Clock, X, Check } from "lucide-react";
+import { Search, ArrowLeft, Clock, X, Check } from "lucide-react";
 import { useApp } from "@/store/app-store";
 import { cn } from "@/lib/utils";
 import { useState, useRef, useEffect, useMemo } from "react";
@@ -113,7 +113,7 @@ function ThemePicker() {
 
 
 export function Header() {
-  const { cart, setCartOpen, stories, navigate, t } = useApp();
+  const { stories, navigate, t } = useApp();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [recent, setRecent] = useState<string[]>([]);
@@ -191,24 +191,6 @@ export function Header() {
               </button>
 
               <ThemePicker />
-
-              <button
-                id="arya-cart-target"
-                onClick={() => setCartOpen(true)}
-                className={cn(
-                  "relative h-9 w-9 grid place-items-center transition-all shrink-0 active:scale-95",
-                  useApp().theme === "cream"
-                    ? "rounded-xl border-2 border-black bg-white shadow-[2px_2px_0px_#000]"
-                    : "rounded-full bg-muted hover:bg-border/50"
-                )}
-              >
-                <ShoppingCart className="h-4 w-4 text-foreground" />
-                {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-foreground text-background text-[10px] font-bold grid place-items-center border-2 border-background">
-                    {cart.length}
-                  </span>
-                )}
-              </button>
             </div>
           </div>
 
