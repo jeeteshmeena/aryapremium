@@ -1,4 +1,4 @@
-import { ChevronLeft, Minus, Plus, Trash2, ShoppingBag, Send, Sparkles } from "lucide-react";
+import { ChevronLeft, Minus, Plus, Trash2, ShoppingBag, Send, Sparkles, Check, ShieldCheck, Zap, ArrowRight, Tag } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useApp } from "@/store/app-store";
 import { cn } from "@/lib/utils";
@@ -186,40 +186,87 @@ export function CartPanel() {
                 ))}
               </ul>
 
-              {/* Promo code */}
-              <div className="mt-5 flex items-center gap-2">
-                <div className="flex-1 h-12 rounded-2xl bg-surface border border-border flex items-center px-4">
+              {/* Promo code — unified pill (Apply lives inside the field) */}
+              <div className="mt-5">
+                <div
+                  className={cn(
+                    "h-14 rounded-2xl bg-surface border flex items-center pl-4 pr-1.5 gap-2 transition-colors",
+                    promoApplied
+                      ? "border-emerald-500/60 bg-emerald-500/5"
+                      : "border-border focus-within:border-foreground/40"
+                  )}
+                >
+                  <Tag className={cn(
+                    "h-4 w-4 shrink-0",
+                    promoApplied ? "text-emerald-600" : "text-muted-foreground"
+                  )} />
                   <input
                     value={promo}
                     onChange={(e) => { setPromo(e.target.value); setPromoApplied(false); }}
                     placeholder={t("cart.promoPlaceholder") || "Promo Code"}
-                    className="flex-1 bg-transparent outline-none text-[14px] text-foreground placeholder:text-muted-foreground"
+                    className="flex-1 bg-transparent outline-none text-[14px] text-foreground placeholder:text-muted-foreground/70 tracking-wide"
                   />
-                  {promoApplied && (
-                    <span className="text-[11px] font-bold text-emerald-600 ml-2">−10%</span>
+                  {promoApplied ? (
+                    <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 mr-2">
+                      <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                      −10%
+                    </span>
+                  ) : (
+                    <button
+                      onClick={applyPromo}
+                      disabled={!promo.trim()}
+                      className="h-11 px-5 rounded-xl bg-foreground text-background text-[13px] font-bold tracking-tight active:scale-95 transition disabled:opacity-30 disabled:active:scale-100"
+                    >
+                      {t("cart.apply") || "Apply"}
+                    </button>
                   )}
                 </div>
-                <button
-                  onClick={applyPromo}
-                  disabled={!promo.trim()}
-                  className="h-12 px-5 rounded-2xl bg-foreground text-background text-[14px] font-bold active:scale-95 transition disabled:opacity-40 disabled:active:scale-100"
-                >
-                  {t("cart.apply") || "Apply"}
-                </button>
               </div>
 
-              {/* Delivery details (digital — no address) */}
-              <section className="mt-5 rounded-2xl bg-surface border border-border/60 p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Send className="h-3.5 w-3.5 text-muted-foreground" />
+              {/* Delivery details — digital, no address */}
+              <section className="mt-5 rounded-2xl bg-surface border border-border/60 overflow-hidden">
+                <div className="flex items-center justify-between px-4 pt-4 pb-2">
                   <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                     {t("cart.deliveryDetails") || "Delivery Details"}
                   </h3>
+                  <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                    <Zap className="h-3 w-3" /> Instant
+                  </span>
                 </div>
-                <p className="text-[13px] text-foreground leading-relaxed">
-                  {t("cart.deliveryInfo") ||
-                    "This is a digital purchase. After payment, your files will be delivered instantly inside Telegram by our bot — open the chat with @AryaPremiumBot to receive them."}
-                </p>
+
+                <div className="px-4 pb-4">
+                  {/* Telegram bot pill */}
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border/50">
+                    <div className="h-10 w-10 rounded-full grid place-items-center shrink-0"
+                         style={{ background: "linear-gradient(135deg,#2AABEE 0%,#229ED9 100%)" }}>
+                      <Send className="h-4.5 w-4.5 text-white" strokeWidth={2.2} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[13px] font-semibold text-foreground leading-tight">
+                        Delivered via Telegram bot
+                      </div>
+                      <div className="text-[11px] text-muted-foreground truncate mt-0.5">
+                        @AryaPremiumBot · in-chat, no shipping
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3-step micro-timeline */}
+                  <div className="mt-3 grid grid-cols-3 gap-2">
+                    {[
+                      { n: "1", label: "Pay" },
+                      { n: "2", label: "Verify" },
+                      { n: "3", label: "Receive" },
+                    ].map((s) => (
+                      <div key={s.n} className="rounded-xl bg-muted/40 border border-border/40 px-2 py-2 flex items-center gap-2">
+                        <span className="h-5 w-5 rounded-full bg-foreground text-background text-[10px] font-bold grid place-items-center">
+                          {s.n}
+                        </span>
+                        <span className="text-[11px] font-semibold text-foreground">{s.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </section>
 
               {/* Payment methods preview */}
@@ -235,7 +282,7 @@ export function CartPanel() {
 
               {/* Bill */}
               <section className="mt-5 rounded-2xl bg-surface border border-border/60 p-4 space-y-2">
-                <BillRow label={t("cart.subtotal") || "Subtotal"} value={fmt(subtotal)} />
+                <BillRow label={`${t("cart.subtotal") || "Order Amount"} (${cart.length} ${cart.length === 1 ? "item" : "items"})`} value={fmt(subtotal)} />
                 {promoApplied && (
                   <BillRow label={`${t("cart.discount") || "Discount"} (10%)`} value={`− ${fmt(discount)}`} accent />
                 )}
@@ -243,11 +290,16 @@ export function CartPanel() {
                 <div className="border-t border-dashed border-border my-2" />
                 <BillRow label={t("cart.total") || "Total Payment"} value={fmt(total)} bold large />
               </section>
+
+              {/* Trust strip */}
+              <div className="mt-4 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                <span>Secure SSL checkout · No card stored</span>
+              </div>
             </>
           )}
         </div>
       </main>
-
       {/* Sticky checkout footer (only when items present) */}
       {cart.length > 0 && (
         <footer
@@ -256,10 +308,22 @@ export function CartPanel() {
         >
           <button
             onClick={handleCheckout}
-            className="w-full h-14 rounded-2xl bg-foreground text-background font-bold text-[15px] tracking-tight active:scale-[0.98] transition flex items-center justify-center gap-2 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)]"
+            className="w-full h-[58px] rounded-full bg-foreground text-background font-bold tracking-tight active:scale-[0.98] transition flex items-center justify-between pl-5 pr-2 shadow-[0_10px_28px_-8px_rgba(0,0,0,0.45)]"
           >
-            {t("cart.checkout") || "Proceed To Checkout"}
-            <span className="opacity-70">→</span>
+            <span className="flex flex-col items-start leading-none">
+              <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-background/60">
+                {t("cart.total") || "Total"}
+              </span>
+              <span className="text-[17px] font-extrabold tabular-nums mt-1">{fmt(total)}</span>
+            </span>
+            <span className="flex items-center gap-2 h-[44px] pl-4 pr-3 rounded-full bg-background/15">
+              <span className="text-[14px] font-bold">
+                {t("cart.checkout") || "Proceed To Checkout"}
+              </span>
+              <span className="h-7 w-7 rounded-full bg-background text-foreground grid place-items-center">
+                <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.6} />
+              </span>
+            </span>
           </button>
         </footer>
       )}
